@@ -1,0 +1,16 @@
+syntax = "proto3";
+package nn_sq;
+
+service NNTrainPredict{
+  rpc PredictModel (NNRequest) returns (NNResponse){}
+}
+
+message NNRequest {
+  int32 operation = 1;
+  string model_name = 2;
+}
+
+message NNResponse {
+  string ack = 1;
+}
+
