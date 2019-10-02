@@ -68,10 +68,10 @@ def train_model():
   mid_range = int(redis_db.get('mid_range'))
   manager = Manager()
   m_dict = manager.dict()
-  n_samples = 100000 # number of samples between 0 and mid_range
-  epochs = 20
-  batch_size = 1000
-  mid_range = 10 # range within which data is required
+  #n_samples = 100000 # number of samples between 0 and mid_range
+  #epochs = 20
+  #batch_size = 1000
+  #mid_range = 10 # range within which data is required
   IP = 'localhost:'
   PORT = '5001'
   X,y = get_data(n_samples, mid_range)
