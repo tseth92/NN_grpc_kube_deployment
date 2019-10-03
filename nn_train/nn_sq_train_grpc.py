@@ -61,7 +61,7 @@ def train_model():
   #gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.3)
   #tf_sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
   #KTF.set_session(tf_sess)
-  redis_db = redis.StrictRedis(host="172.18.0.2", port=6379, charset="utf-8", decode_responses=True)
+  redis_db = redis.StrictRedis(host="localhost", port=6379, charset="utf-8", decode_responses=True)
   n_samples = int(redis_db.get('n_samples'))
   epochs = int(redis_db.get('epochs'))
   batch_size = int(redis_db.get('batch_size'))
