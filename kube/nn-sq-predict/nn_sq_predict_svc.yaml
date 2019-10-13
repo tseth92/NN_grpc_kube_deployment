@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nn-sq-predict-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: nn-sq-predict 
+  ports:
+  - name: flask-port
+    protocol: TCP
+    port: 5001
+    targetPort: 5001

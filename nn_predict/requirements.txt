@@ -1,0 +1,6 @@
+numpy
+matplotlib
+keras==2.2.5
+flask
+flask_api
+redis

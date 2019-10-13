@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nn-sq-predict-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nn-sq-predict
+  template:
+    metadata:
+      labels:
+        app: nn-sq-predict
+    spec:
+      containers:
+      - name: nn-predict
+        image: tseth/nn_predict:1.3
+        ports:
+        - containerPort: 5001

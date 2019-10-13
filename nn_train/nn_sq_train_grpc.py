@@ -25,7 +25,7 @@ from flask import Response
 import nn_sq_pb2_grpc
 import nn_sq_pb2
 #from numba import cuda
-import keras.backend.tensorflow_backend as KTF
+#import keras.backend.tensorflow_backend as KTF
 import threading
 import multiprocessing
 from multiprocessing import Process, Manager
@@ -58,21 +58,27 @@ def get_model():
 ''' train the model for specified number of epochs, batch_size'''
 @APP.route("/trainNNSq", methods=['GET'])
 def train_model():
+  print('in train model')
   #gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.3)
   #tf_sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
   #KTF.set_session(tf_sess)
-  redis_db = redis.StrictRedis(host="localhost", port=6379, charset="utf-8", decode_responses=True)
-  n_samples = int(redis_db.get('n_samples'))
-  epochs = int(redis_db.get('epochs'))
-  batch_size = int(redis_db.get('batch_size'))
-  mid_range = int(redis_db.get('mid_range'))
+  #redis_db = redis.StrictRedis(host="localhost", port=6379, charset="utf-8", decode_responses=True)
+  #n_samples = int(redis_db.get('n_samples'))
+  #epochs = int(redis_db.get('epochs'))
+  #batch_size = int(redis_db.get('batch_size'))
+  #mid_range = int(redis_db.get('mid_range'))
+  #n_samples = int(os.environ['n_samples'])
+  #epochs = int(os.environ['epochs'])
+  #batch_size = int(os.environ['batch_size'])
+  #mid_range = int(os.environ['mid_range'])
+  #print('n_samples'+str(n_samples))
   manager = Manager()
   m_dict = manager.dict()
-  #n_samples = 100000 # number of samples between 0 and mid_range
-  #epochs = 20
-  #batch_size = 1000
-  #mid_range = 10 # range within which data is required
-  IP = 'localhost:'
+  n_samples = 100000 # number of samples between 0 and mid_range
+  epochs = 20
+  batch_size = 1000
+  mid_range = 10 # range within which data is required
+  IP = 'nn-sq-predict-svc'
   PORT = '5001'
   X,y = get_data(n_samples, mid_range)
   pp.figure(figsize=(10,3))
@@ -84,16 +90,16 @@ def train_model():
   #             batch_size=batch_size,
   #             verbose=1)
   print('sleeping')
-  time.sleep(7)
+  #time.sleep(7)
   validation_split = 0.2
   verbose = 1
   queue = multiprocessing.Queue()
   t1 = Process(target = fit_model, args=(model, X, y, validation_split, epochs, batch_size, verbose, queue, m_dict))
-  #t1 = fit_model(model, X, y, validation_split, epochs, batch_size, verbose)
+  #t1 = fit_model(model, X, y, validation_split, epochs, batch_size, verbose, queue, m_dict)
   t1.start()
   t1.join()
   print('going to dump model')
-  time.sleep(3)
+  #time.sleep(3)
   model_name = m_dict['model_name']
   print('model_name_received: ', model_name)
   #model_name = str(time.time()).split('.')[0]
@@ -138,4 +144,4 @@ def fit_model(model, X, y, validation_split, epochs, batch_size, verbose, queue,
 
 if __name__ == '__main__' :
   #model = train_model(n_samples, mid_range, epochs, batch_size)
-  APP.run(host='127.0.0.1', port=5000)
+  APP.run(host='0.0.0.0', port=5000)

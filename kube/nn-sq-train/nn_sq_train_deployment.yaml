@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nn-sq-train-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nn-sq-train
+  template:
+    metadata:
+      labels:
+        app: nn-sq-train
+    spec:
+      containers:
+      - name: nn-train
+        image: tseth/nn_train:2.8
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: nn-volume
+          mountPath: /mnt/data
+      volumes:
+      - name: nn-volume
+        persistentVolumeClaim:
+          claimName: nn-pvc
+
+        #volumeMounts:
+        #- name: nn-config-map
+        #  mountPath: /etc/config
+          #env:
+          #- name: n_samples 
+          #  valueFrom: 
+          #    configMapKeyRef:
+          #      name: config.cnf
+          #      key: n_samples
+          #- name: epochs
+          #  valueFrom:
+          #    configMapKeyRef:
+          #      name: config.cnf
+          #      key: epochs
+          #- name: batch_size
+          #  valueFrom:
+          #    configMapKeyRef:
+          ##      name: config.cnf
+          #      key: batch_size
+          #- name: mid_range
+          #  valueFrom:
+          #    configMapKeyRef:
+          #      name: config.cnf
+          #      key: mid_range
+    #volumes:
+    #  - name: nn-config-map
+    #    configMap:
+    #      name: nn-configmap
+    #      items:
+    #      - key: config.cnf
+    #        path: config2.cnf.cnf2 
+              
+
+      #- name: redis-nn
+      #  image: tseth/nn_redis_config:1.2
+      #  ports:
+      #  - containerPort: 6379
