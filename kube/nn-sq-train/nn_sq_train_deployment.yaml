@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: nn-train
-        image: tseth/nn_train:2.15
+        image: tseth/nn_train:2.16
         ports:
         - containerPort: 5000
         volumeMounts:

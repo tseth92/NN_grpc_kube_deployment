@@ -78,7 +78,7 @@ def train_model():
   epochs = 20
   batch_size = 1000
   mid_range = 10 # range within which data is required
-  IP = '10.0.3.160'
+  IP = 'nn-sq-predict-svc'
   PORT = ':5001'
   X,y = get_data(n_samples, mid_range)
   pp.figure(figsize=(10,3))
