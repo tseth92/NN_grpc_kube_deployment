@@ -14,16 +14,17 @@ spec:
     spec:
       containers:
       - name: nn-train
-        image: tseth/nn_train:2.8
+        image: tseth/nn_train:2.15
         ports:
         - containerPort: 5000
         volumeMounts:
         - name: nn-volume
-          mountPath: /mnt/data
+          mountPath: /mnt/nn-disk
       volumes:
       - name: nn-volume
         persistentVolumeClaim:
           claimName: nn-pvc
+          readOnly: false
 
         #volumeMounts:
         #- name: nn-config-map

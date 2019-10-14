@@ -12,4 +12,4 @@ RUN pip3 install -r /home/nn_train/requirements.txt
 
 EXPOSE 5000
 
-CMD ["python", "/home/nn_train/nn_sq_train_grpc.py"]
+CMD ["python3", "/home/nn_train/nn_sq_train_grpc.py"]

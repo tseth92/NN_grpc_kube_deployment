@@ -3,10 +3,13 @@ kind: PersistentVolume
 metadata:
   name: nn-disk
 spec:
-  storageClassName: manual
+  #storageClassName: manual
   capacity:
     storage: 10Gi #Size of the volume
   accessModes:
-    - ReadWriteOnce #type of access
-  hostPath:
-    path: "/mnt/data"
+    - ReadWriteMany #type of access
+  #hostPath:
+  #  path: "/mnt/data"
+  nfs:
+    path: /nn_fileshare
+    server: 10.134.196.106

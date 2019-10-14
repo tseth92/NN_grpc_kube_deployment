@@ -74,7 +74,7 @@ class prediction_server(nn_sq_pb2_grpc.NNTrainPredictServicer):
     model_file_name = request.model_name
     print('model file name is: ', model_file_name)
     X,y = self.get_data(n_samples, mid_range)
-    model = pickle.load(open(model_file_name, 'rb'))
+    model = pickle.load(open('/mnt/nn-disk/'+model_file_name, 'rb'))
     pred = model.predict(X)
     mid_range = 20
     X2 = np.random.random((n_samples,1))*mid_range-(mid_range/2)

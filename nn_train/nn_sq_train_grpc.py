@@ -78,8 +78,8 @@ def train_model():
   epochs = 20
   batch_size = 1000
   mid_range = 10 # range within which data is required
-  IP = 'nn-sq-predict-svc'
-  PORT = '5001'
+  IP = '10.0.3.160'
+  PORT = ':5001'
   X,y = get_data(n_samples, mid_range)
   pp.figure(figsize=(10,3))
   pp.plot(X,y,'.')
@@ -138,7 +138,7 @@ def fit_model(model, X, y, validation_split, epochs, batch_size, verbose, queue,
   queue.put('nn_sq_'+model_name)
   m_dict['model_name'] = model_name
   #queue.put(model)
-  pickle.dump(model, open('nn_sq_'+model_name, 'wb'))
+  pickle.dump(model, open('/mnt/nn-disk/nn_sq_'+model_name, 'wb'))
   #return h
   
 

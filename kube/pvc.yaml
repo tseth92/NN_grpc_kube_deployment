@@ -4,7 +4,8 @@ metadata:
   name: nn-pvc
 spec:
   accessModes:
-    - ReadWriteMany 
+    - ReadWriteMany
+  storageClassName: "" 
   resources:
     requests:
-      storage: 10Gi
+      storage: 7Gi

@@ -14,6 +14,52 @@ spec:
     spec:
       containers:
       - name: nn-predict
-        image: tseth/nn_predict:1.3
+        image: tseth/nn_predict:1.5
         ports:
         - containerPort: 5001
+        volumeMounts:
+        - name: nn-volume-predict
+          mountPath: /mnt/nn-disk
+      volumes:
+      - name: nn-volume-predict
+        persistentVolumeClaim:
+          claimName: nn-pvc
+          readOnly: false
+
+        #volumeMounts:
+        #- name: nn-config-map
+        #  mountPath: /etc/config
+          #env:
+          #- name: n_samples 
+          #  valueFrom: 
+          #    configMapKeyRef:
+          #      name: config.cnf
+          #      key: n_samples
+          #- name: epochs
+          #  valueFrom:
+          #    configMapKeyRef:
+          #      name: config.cnf
+          #      key: epochs
+          #- name: batch_size
+          #  valueFrom:
+          #    configMapKeyRef:
+          ##      name: config.cnf
+          #      key: batch_size
+          #- name: mid_range
+          #  valueFrom:
+          #    configMapKeyRef:
+          #      name: config.cnf
+          #      key: mid_range
+    #volumes:
+    #  - name: nn-config-map
+    #    configMap:
+    #      name: nn-configmap
+    #      items:
+    #      - key: config.cnf
+    #        path: config2.cnf.cnf2 
+              
+
+      #- name: redis-nn
+      #  image: tseth/nn_redis_config:1.2
+      #  ports:
+      #  - containerPort: 6379
