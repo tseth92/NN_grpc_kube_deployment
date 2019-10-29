@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: nn-predict
-        image: tseth/nn_predict:1.5
+        image: tseth/nn_predict:1.6
         ports:
         - containerPort: 5001
         volumeMounts:
