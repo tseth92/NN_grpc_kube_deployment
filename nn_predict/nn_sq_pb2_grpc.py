@@ -14,7 +14,7 @@ class NNTrainPredictStub(object):
     Args:
       channel: A grpc.Channel.
     """
-    self.PredictModel = channel.unary_unary(
+    self.PredictModel = channel.unary_stream(
         '/nn_sq.NNTrainPredict/PredictModel',
         request_serializer=nn__sq__pb2.NNRequest.SerializeToString,
         response_deserializer=nn__sq__pb2.NNResponse.FromString,
@@ -35,7 +35,7 @@ class NNTrainPredictServicer(object):
 
 def add_NNTrainPredictServicer_to_server(servicer, server):
   rpc_method_handlers = {
-      'PredictModel': grpc.unary_unary_rpc_method_handler(
+      'PredictModel': grpc.unary_stream_rpc_method_handler(
           servicer.PredictModel,
           request_deserializer=nn__sq__pb2.NNRequest.FromString,
           response_serializer=nn__sq__pb2.NNResponse.SerializeToString,

@@ -27,15 +27,6 @@ from concurrent import futures
 import keras.backend as KTF
 import os
 '''configurations for neural net'''
-## change these values to experiment
-
-#APP = FlaskAPI(__name__)
-
-##n_samples = 100000 # number of samples between 0 and mid_range
-##epochs = 150
-##batch_size = 1000
-##mid_range = 10 # range within which data is required
-
 
 class prediction_server(nn_sq_pb2_grpc.NNTrainPredictServicer):
   
@@ -56,15 +47,9 @@ class prediction_server(nn_sq_pb2_grpc.NNTrainPredictServicer):
   the training dataset'''
   #@APP.route("/predictNNSq", methods=['GET'])
   def PredictModel(self, request, context):
-    #pred = model.predict(X)
-    #config = tf.ConfigProto()
-    #config.gpu_options.allow_growth = False
-    #config.gpu_options.per_process_gpu_memory_fraction = 0.40
-    #keras.backend.tensorflow_backend.set_session(tf.Session(config=config))
     gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.3)
     tf_sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
     KTF.set_session(tf_sess)
-    print('pid is : ', os.getpid())
     response_dict = {}
     n_samples = 100000 # number of samples between 0 and mid_range
     epochs = 150
@@ -83,24 +68,22 @@ class prediction_server(nn_sq_pb2_grpc.NNTrainPredictServicer):
     # in the form (inputData, expectedOutputData, predictedOutputData, difference)
      #pred2 = model.predict([-6])
     for i,j in zip(X, pred):
-      print(i,i*i,j, j-(i*i))
-    pp.figure(figsize=(10,3))
-    pp.plot(X,pred, '.')
-    pp.xlabel('x')
-    pp.ylabel('prediction')
-    pp.title('Prediction within training sample space')
-    pp.figure(figsize=(10,3))
-    pp.plot(X2,pred2, '.')
-    pp.xlabel('x')
-    pp.ylabel('prediction')
-    pp.title('Prediction outside training sample space')
-    #response_dict['STATUS'] = "true"
-    #js_dump = json.dumps(response_dict)
-    #resp = Response(js_dump,\
-    #                      status=200,\
-    #                      mimetype='application/json')
-    resp = nn_sq_pb2.NNResponse(ack = 'Success') 
-    return resp
+      result = str(i)+str(i*i)+str(j)+str(j-(i*i))
+      res = nn_sq_pb2.NNResponse(progress=result)
+      print(res)
+      yield res
+    #pp.figure(figsize=(10,3))
+    #pp.plot(X,pred, '.')
+    #pp.xlabel('x')
+    #pp.ylabel('prediction')
+    ##pp.title('Prediction within training sample space')
+    #pp.figure(figsize=(10,3))
+    #pp.plot(X2,pred2, '.')
+    #pp.xlabel('x')
+    #pp.ylabel('prediction')
+    #pp.title('Prediction outside training sample space')
+    #resp = nn_sq_pb2.NNResponse(ack = 'Success') 
+    #return resp
 
 def serve():
   PORT = 5001

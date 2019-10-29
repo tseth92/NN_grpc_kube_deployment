@@ -2,7 +2,7 @@ syntax = "proto3";
 package nn_sq;
 
 service NNTrainPredict{
-  rpc PredictModel (NNRequest) returns (NNResponse){}
+  rpc PredictModel (NNRequest) returns (stream NNResponse){}
 }
 
 message NNRequest {
@@ -11,6 +11,6 @@ message NNRequest {
 }
 
 message NNResponse {
-  string ack = 1;
+  string progress = 1;
 }
 

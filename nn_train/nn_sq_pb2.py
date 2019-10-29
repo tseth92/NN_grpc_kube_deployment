@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='nn_sq',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0bnn_sq.proto\x12\x05nn_sq\"2\n\tNNRequest\x12\x11\n\toperation\x18\x01 \x01(\x05\x12\x12\n\nmodel_name\x18\x02 \x01(\t\"\x19\n\nNNResponse\x12\x0b\n\x03\x61\x63k\x18\x01 \x01(\t2G\n\x0eNNTrainPredict\x12\x35\n\x0cPredictModel\x12\x10.nn_sq.NNRequest\x1a\x11.nn_sq.NNResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x0bnn_sq.proto\x12\x05nn_sq\"2\n\tNNRequest\x12\x11\n\toperation\x18\x01 \x01(\x05\x12\x12\n\nmodel_name\x18\x02 \x01(\t\"\x1e\n\nNNResponse\x12\x10\n\x08progress\x18\x01 \x01(\t2I\n\x0eNNTrainPredict\x12\x37\n\x0cPredictModel\x12\x10.nn_sq.NNRequest\x1a\x11.nn_sq.NNResponse\"\x00\x30\x01\x62\x06proto3')
 )
 
 
@@ -72,7 +72,7 @@ _NNRESPONSE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='ack', full_name='nn_sq.NNResponse.ack', index=0,
+      name='progress', full_name='nn_sq.NNResponse.progress', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -91,7 +91,7 @@ _NNRESPONSE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=74,
-  serialized_end=99,
+  serialized_end=104,
 )
 
 DESCRIPTOR.message_types_by_name['NNRequest'] = _NNREQUEST
@@ -120,8 +120,8 @@ _NNTRAINPREDICT = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=101,
-  serialized_end=172,
+  serialized_start=106,
+  serialized_end=179,
   methods=[
   _descriptor.MethodDescriptor(
     name='PredictModel',

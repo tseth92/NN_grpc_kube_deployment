@@ -19,13 +19,12 @@ import pickle
 import time
 import grpc
 from flask import request
+from flask import Response
 from flask import json
 from flask_api import FlaskAPI
 from flask import Response
 import nn_sq_pb2_grpc
 import nn_sq_pb2
-#from numba import cuda
-#import keras.backend.tensorflow_backend as KTF
 import threading
 import multiprocessing
 from multiprocessing import Process, Manager
@@ -59,75 +58,48 @@ def get_model():
 @APP.route("/trainNNSq", methods=['GET'])
 def train_model():
   print('in train model')
-  #gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.3)
-  #tf_sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
-  #KTF.set_session(tf_sess)
-  #redis_db = redis.StrictRedis(host="localhost", port=6379, charset="utf-8", decode_responses=True)
-  #n_samples = int(redis_db.get('n_samples'))
-  #epochs = int(redis_db.get('epochs'))
-  #batch_size = int(redis_db.get('batch_size'))
-  #mid_range = int(redis_db.get('mid_range'))
-  #n_samples = int(os.environ['n_samples'])
-  #epochs = int(os.environ['epochs'])
-  #batch_size = int(os.environ['batch_size'])
-  #mid_range = int(os.environ['mid_range'])
-  #print('n_samples'+str(n_samples))
+  #return "hello"
   manager = Manager()
   m_dict = manager.dict()
   n_samples = 100000 # number of samples between 0 and mid_range
   epochs = 20
   batch_size = 1000
   mid_range = 10 # range within which data is required
-  IP = 'nn-sq-predict-svc'
+  #IP = 'nn-sq-predict-svc'
+  IP = 'localhost'
   PORT = ':5001'
+  response = 'Failure'
   X,y = get_data(n_samples, mid_range)
-  pp.figure(figsize=(10,3))
-  pp.plot(X,y,'.')
-  print('pid parent is: ', os.getpid())
+  #pp.figure(figsize=(10,3))
+  #pp.plot(X,y,'.')
   model = get_model()
-  #h = model.fit(X, y, validation_split=0.2,
-  #             epochs=epochs,
-  #             batch_size=batch_size,
-  #             verbose=1)
-  print('sleeping')
-  #time.sleep(7)
   validation_split = 0.2
   verbose = 1
   queue = multiprocessing.Queue()
   t1 = Process(target = fit_model, args=(model, X, y, validation_split, epochs, batch_size, verbose, queue, m_dict))
-  #t1 = fit_model(model, X, y, validation_split, epochs, batch_size, verbose, queue, m_dict)
   t1.start()
   t1.join()
   print('going to dump model')
-  #time.sleep(3)
   model_name = m_dict['model_name']
   print('model_name_received: ', model_name)
-  #model_name = str(time.time()).split('.')[0]
-  #time.sleep(7)
-  #pickle.dump(model, open('nn_sq_'+model_name, 'wb'))
-  print('model dumped')
-  #print('queue get:',queue.get())
-  #t1.terminate()
-  #time.sleep(3)
-  #cuda.select_device(0)
-  #cuda.close() 
-  #pp.figure(figsize=(15,2.5))
-  #pp.plot(h.history['loss'])
-  
+ 
   #//////////////// GRPC CALL ////////////////#
-  with grpc.insecure_channel(IP+PORT) as channel:
-    stub = nn_sq_pb2_grpc.NNTrainPredictStub(channel)
-    pred_request = nn_sq_pb2.NNRequest(operation=2,model_name='nn_sq_'+model_name) 
-    response = stub.PredictModel(pred_request)
-  print(str(response))
-  return model
-  print("Greeter client received: " + response.message)
+  channel = grpc.insecure_channel(IP+PORT)
+  #with grpc.insecure_channel(IP+PORT) as channel:
+  print('in with')
+  stub = nn_sq_pb2_grpc.NNTrainPredictStub(channel)
+  pred_request = nn_sq_pb2.NNRequest(operation=2,model_name='nn_sq_'+model_name)
+  print(pred_request)
+  def yield_response(pred_request):
+    print('in yield_response')
+    for resp in stub.PredictModel(pred_request):
+      print(resp.progress)
+      yield str(resp.progress)+'\n'
+  print('going to call yield_response')
+  return Response(yield_response(pred_request))
+  #return 'hello'
 
 def fit_model(model, X, y, validation_split, epochs, batch_size, verbose, queue, m_dict):
-  
-  #gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.3)
-  #tf_sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
-  #KTF.set_session(tf_sess)
   print('pid child is: ', os.getpid())
   h = model.fit(X, y, validation_split=0.2,
                epochs=epochs,
@@ -137,11 +109,9 @@ def fit_model(model, X, y, validation_split, epochs, batch_size, verbose, queue,
   print('putting to queue_model_name', model_name)
   queue.put('nn_sq_'+model_name)
   m_dict['model_name'] = model_name
-  #queue.put(model)
   pickle.dump(model, open('/mnt/nn-disk/nn_sq_'+model_name, 'wb'))
-  #return h
   
 
 if __name__ == '__main__' :
-  #model = train_model(n_samples, mid_range, epochs, batch_size)
+  print('in main')
   APP.run(host='0.0.0.0', port=5000)

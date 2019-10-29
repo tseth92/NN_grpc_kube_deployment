@@ -1,4 +1,0 @@
-n_samples = 100000
-batch_size = 20 
-epochs = 1000
-mid_size = 10
