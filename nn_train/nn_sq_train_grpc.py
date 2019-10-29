@@ -65,8 +65,7 @@ def train_model():
   epochs = 20
   batch_size = 1000
   mid_range = 10 # range within which data is required
-  #IP = 'nn-sq-predict-svc'
-  IP = 'localhost'
+  IP = 'nn-sq-predict-svc'
   PORT = ':5001'
   response = 'Failure'
   X,y = get_data(n_samples, mid_range)
